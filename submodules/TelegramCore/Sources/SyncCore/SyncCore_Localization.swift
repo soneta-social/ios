@@ -225,3 +225,35 @@ public final class Localization: Codable, Equatable {
         return false
     }
 }
+
+private let localizationBrandingReplacements: [(from: String, to: String)] = [
+    ("Telegram", "Soneta"),
+    ("TELEGRAM", "SONETA")
+]
+
+public func applyLocalizationBranding(to value: String) -> String {
+    var result = value
+    for (from, to) in localizationBrandingReplacements {
+        result = result.replacingOccurrences(of: from, with: to)
+    }
+    return result
+}
+
+public func applyLocalizationBranding(to entries: [LocalizationEntry]) -> [LocalizationEntry] {
+    return entries.map { entry in
+        switch entry {
+        case let .string(key, value):
+            return .string(key: key, value: applyLocalizationBranding(to: value))
+        case let .pluralizedString(key, zero, one, two, few, many, other):
+            return .pluralizedString(key: key, zero: zero.map({ applyLocalizationBranding(to: $0) }), one: one.map({ applyLocalizationBranding(to: $0) }), two: two.map({ applyLocalizationBranding(to: $0) }), few: few.map({ applyLocalizationBranding(to: $0) }), many: many.map({ applyLocalizationBranding(to: $0) }), other: applyLocalizationBranding(to: other))
+        }
+    }
+}
+
+public func applyLocalizationBranding(to dict: [String: String]) -> [String: String] {
+    var result: [String: String] = [:]
+    for (key, value) in dict {
+        result[key] = applyLocalizationBranding(to: value)
+    }
+    return result
+}

@@ -38,7 +38,7 @@ func _internal_suggestedLocalizationInfo(network: Network, languageCode: String,
                 }
             }
             let infos: [LocalizationInfo] = languages.map(LocalizationInfo.init(apiLanguage:))
-            return SuggestedLocalizationInfo(languageCode: languageCode, extractedEntries: entries, availableLocalizations: infos)
+            return SuggestedLocalizationInfo(languageCode: languageCode, extractedEntries: applyLocalizationBranding(to: entries), availableLocalizations: infos)
         }
 }
 
@@ -100,7 +100,7 @@ func _internal_downloadLocalization(network: Network, languageCode: String) -> S
                 }
         }
         
-        return Localization(version: version, entries: entries)
+        return Localization(version: version, entries: applyLocalizationBranding(to: entries))
     }
 }
 

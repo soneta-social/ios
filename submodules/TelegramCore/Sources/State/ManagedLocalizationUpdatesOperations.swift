@@ -148,7 +148,7 @@ private func parseLangPackDifference(_ difference: Api.LangPackDifference) -> (c
                         entries.append(.string(key: key, value: ""))
                 }
             }
-            return (code, fromVersion, version, entries)
+            return (code, fromVersion, version, applyLocalizationBranding(to: entries))
     }
 }
 
@@ -288,6 +288,7 @@ func tryApplyingLanguageDifference(transaction: AccountManagerModifier<TelegramA
                 }
             }
             mergedEntries.append(contentsOf: updatedEntries)
+            mergedEntries = applyLocalizationBranding(to: mergedEntries)
             
             let currentSettings = transaction.getSharedData(SharedDataKeys.localizationSettings)?.get(LocalizationSettings.self) ?? LocalizationSettings(primaryComponent: LocalizationComponent(languageCode: "en", localizedName: "English", localization: Localization(version: 0, entries: []), customPluralizationCode: nil), secondaryComponent: nil)
             
