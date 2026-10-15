@@ -123,6 +123,30 @@ struct XcodeParse: ParsableCommand {
 
         rawVariables["ENABLE_PREVIEWS"] = ""
 
+        if rawVariables["DEVELOPER_DIR"] == nil {
+            var developerDir: String? = ProcessInfo.processInfo.environment["DEVELOPER_DIR"]
+            if developerDir == nil || developerDir!.isEmpty {
+                let process = Process()
+                process.executableURL = URL(fileURLWithPath: "/usr/bin/xcode-select")
+                process.arguments = ["-p"]
+                let pipe = Pipe()
+                process.standardOutput = pipe
+                process.standardError = Pipe()
+                do {
+                    try process.run()
+                    let data = pipe.fileHandleForReading.readDataToEndOfFile()
+                    process.waitUntilExit()
+                    if process.terminationStatus == 0 {
+                        developerDir = String(data: data, encoding: .utf8)?
+                            .trimmingCharacters(in: .whitespacesAndNewlines)
+                    }
+                } catch {
+                    // Fall through to the default below.
+                }
+            }
+            rawVariables["DEVELOPER_DIR"] = (developerDir?.isEmpty == false ? developerDir! : "/Applications/Xcode.app/Contents/Developer")
+        }
+
         let variables = rawVariables
 
         let projectRoot = variables["SRCROOT"]! + "/"

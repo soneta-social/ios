@@ -55,6 +55,8 @@ bazel-genfiles
 bazel-genfiles/*
 bazel-out
 bazel-out/*
+bazel-ios
+bazel-ios/*
 bazel-telegram-ios
 bazel-telegram-ios/*
 bazel-testlogs

@@ -43,15 +43,15 @@ index 581042e38..88dc80e92 100644
              if [ -d "${alt_libc}" ]; then
                add_cflags -isysroot ${alt_libc}
              fi
-@@ -1167,7 +1177,7 @@ EOF
+@@ -1229,7 +1239,7 @@ EOF
                  ;;
              esac
  
--            if [ "$(show_darwin_sdk_major_version iphoneos)" -gt 8 ]; then
-+            if [ "$(show_darwin_sdk_major_version $sdk_platform_name)" -gt 8 ]; then
+-            if [ "$(show_darwin_sdk_major_version iphoneos)" -gt 8 ] \
++            if [ "$(show_darwin_sdk_major_version $sdk_platform_name)" -gt 8 ] \
+                && [ "$(show_xcode_version | cut -d. -f1)" -lt 16 ]; then
                check_add_cflags -fembed-bitcode
                check_add_asflags -fembed-bitcode
-               check_add_ldflags -fembed-bitcode
 diff --git a/configure b/configure
 index beea65032..f29c9f327 100755
 --- a/configure
